@@ -1,0 +1,38 @@
+================================================================================
+ARQUIVO DE NOTAS: notes.note
+SISTEMA: Diamond Linux
+DATA DE ATUALIZAÇÃO: 2026-08-16
+LICENÇA: Apache License 2.0
+================================================================================
+
+[ 1. VISÃO GERAL DO PROJETO ]
+- A linguagem Diamond foi concebida para unir performance extrema (sem GC, 
+  baseada em ownership) com sintaxe limpa e segura.
+- O subsistema "Diamond Linux" interage diretamente com o kernel através de 
+  chamadas de sistema (syscalls) nativas em assembly/FFI.
+
+[ 2. MAPEAMENTO DE SYSCALLS PRINCIPAIS (X86_64 LINUX) ]
+- sys_read  (0)  -> Leitura de descritores de arquivo / stdin
+- sys_write (1)  -> Escrita em console / arquivos (utilizado no notes.note)
+- sys_open  (2)  -> Abertura e criação de arquivos com flags O_CREAT/O_WRONLY
+- sys_close (3)  -> Fechamento de descritores de arquivo (fd)
+- sys_socket(41) -> Criação de sockets de rede (TCP/UDP)
+- sys_bind  (49) -> Associação de portas e endereços IP
+- sys_listen(50) -> Escuta de conexões de rede ativas
+
+[ 3. DIRETRIZES DE IMPLEMENTAÇÃO PARA NOTAS ]
+- Notas devem ser imutáveis por padrão para evitar corrupção de dados em disco.
+- O tratamento de erros de I/O deve retornar obrigatoriamente tipos do tipo 
+  `Result<T, E>`, forçando o desenvolvedor a tratar falhas de disco ou permissão.
+- O gerenciamento de memória em arquivos de texto utiliza alocação por escopo, 
+  garantindo que os descritores de arquivo (`fd`) sejam fechados automaticamente 
+  assim que o objeto sair de escopo (RAII).
+
+[ 4. PRÓXIMOS PASSOS NO ECOSSISTEMA ]
+- [ ] Finalizar o compilador LLVM para o alvo x86_64-diamond-linux.
+- [ ] Implementar o gerenciador de pacotes `diamup`.
+- [ ] Validar testes de estresse no módulo diamond.sockets com conexões simultâneas.
+
+================================================================================
+FIM DAS NOTAS - DIAMOND LINUX 💎
+================================================================================
